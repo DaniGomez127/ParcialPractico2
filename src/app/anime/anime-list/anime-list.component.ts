@@ -8,25 +8,33 @@ import { AnimeService } from '../anime.service';
   styleUrls: ['./anime-list.component.css']
 })
 export class AnimeListComponent implements OnInit {
+viewDetail(arg0: number) {
+throw new Error('Method not implemented.');
+}
+onMoreInfo(arg0: number) {
+throw new Error('Method not implemented.');
+}
+  animes: Anime[] = [];
+  totalEpisodes: number = 0;
+  averageRating: number = 0;
 
-  selectedBAnime!: Anime;
-  selected = false;
-  animes: Array<Anime> = [];
-  constructor(private animeService: AnimeService) { }
+  constructor(private animeService: AnimeService) {}
 
-  getAnimes(): void {
+  ngOnInit(): void {
+    this.fetchAnimes();
+  }
+
+  fetchAnimes(): void {
     this.animeService.getAnimes().subscribe((animes) => {
       this.animes = animes;
+      this.calculateStatistics();
     });
   }
 
-  onSelected(anime: Anime): void {
-    this.selected = true;
-    this.selectedBAnime = anime;
+  calculateStatistics(): void {
+    this.totalEpisodes = this.animes.reduce((total, anime) => total + anime.episode, 0); // Correcto: 'episode'
+    this.averageRating = parseFloat(
+      (this.animes.reduce((total, anime) => total + parseFloat(anime.Rating), 0) / this.animes.length).toFixed(2) // Correcto: 'Rating' (convertido a número)
+    );
   }
-
-  ngOnInit() {
-    this.getAnimes();
-  }
-
-}
+} 
